@@ -15,7 +15,7 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
         const brlInput = document.getElementById('brl')
 
         brlInput.addEventListener('click', (e) => {
-            if (e.target.value == 0) {
+            if (e.target.value == "0,00") {
                 const comprimentoDoValor = e.target.value.length;
                 // Define a posição inicial e final da seleção para o final do texto
                 e.target.setSelectionRange(comprimentoDoValor, comprimentoDoValor);
@@ -24,7 +24,7 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
 
         usdInput.addEventListener('click', (e) => {
 
-            if (e.target.value == 0) {
+            if (e.target.value == "0.00") {
                 const comprimentoDoValor = e.target.value.length;
                 // Define a posição inicial e final da seleção para o final do texto
                 e.target.setSelectionRange(comprimentoDoValor, comprimentoDoValor);
