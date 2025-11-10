@@ -1,6 +1,6 @@
 date = new Date()
 final=date.getDay()
-diaAtual = date.getDate();
+diaAtual = date.getDate()
 mes = date.getMonth()
 ano = date.getFullYear()
 
@@ -20,10 +20,16 @@ if (final===0) { //Para o dia no Domingo
     diaAtual-=2 
 }
 
-// Para o dia Segunda-Feira antes das 10:12:00 da manhãm
-if(final===1 && horaAtual<='10:12:00'){ 
+// Para o dia Segunda-Feira antes das 17:12:00 da manhãm
+if(final===1 && horaAtual<='17:12:00'){ 
    diaAtual-=3 
 }
+
+// Para o dias Terça a Sexta antes das 17:12:00 da manhãm
+if(final>=2 && final<=5 && horaAtual<='17:12:00'){ 
+   diaAtual-=1
+}
+
 
 fetch('https://gist.githubusercontent.com/sistematico/0d795e73e133632204593f1d1db4a618/raw/7703b5651f888c91505e29f4fc033bc56774454a/feriados.json') 
  .then(resp => resp.json())
