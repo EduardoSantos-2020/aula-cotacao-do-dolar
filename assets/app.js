@@ -1,39 +1,56 @@
 date = new Date()
 final=date.getDay()
-diaAtual = date.getDate()
+diaAtual = date.getDate();
 mes = date.getMonth()
 ano = date.getFullYear()
 
-dataAtual=ano+'-'+(mes+1)+'-'+diaAtual;
+const horaAtual = date.toLocaleTimeString(); 
 
-if (final===0) {//Para o dia no Domingo
-    diaAtual-=2 
+if(diaAtual>=1 && diaAtual<=9){
+    diaAtual='0'+diaAtual
+
 }
+dataAtual=`${ano}-${mes+1}-${diaAtual}`;
+
 if (final===6) { //Para o dia no Sabado
    diaAtual-=1
 }
 
+if (final===0) { //Para o dia no Domingo
+    diaAtual-=2 
+}
+
+// Para o dia Segunda-Feira antes das 10:12:00 da manhãm
+if(final===1 && horaAtual<='10:12:00'){ 
+   diaAtual-=3 
+}
+
 fetch('https://gist.githubusercontent.com/sistematico/0d795e73e133632204593f1d1db4a618/raw/7703b5651f888c91505e29f4fc033bc56774454a/feriados.json') 
-.then(resp => resp.json())
+ .then(resp => resp.json())
     .then(holiday => { 
+      const dates = Object.keys(holiday);
+      let diaFeriado=false;      
+      const FeriadosNacionais = dates;
 
-const dates = Object.keys(holiday);
-const FeriadosNacionais = dates;
-
-FeriadosNacionais.forEach((feriado,indice)=>{
-    if (dataAtual==feriado) {
-        alert(`Cotação do Dolar esta dia o dia Anterior ${diaAtual+'/'+(mes+1)+'/'+ano}.`)
+      FeriadosNacionais.forEach((feriado,indice)=>{ 
+       if (dataAtual=="2025-11-06") { 
+           diaFeriado=true;
+         }        
+       })
+        
+    if(diaFeriado){
         diaAtual-=1
+        if(diaAtual>=1 && diaAtual<=9){
+            diaAtual="0"+diaAtual
+        }
+     alert(`Cotação do Dolar esta dia o dia Anterior ${(diaAtual)+'/'+(mes+1)+'/'+ano}.`)
+        
     }
-})        
-})
+ })
 
-
-fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarPeriodo(dataInicial=@dataInicial,dataFinalCotacao=@dataFinalCotacao)?@dataInicial=%27${mes+1}-${diaAtual}-${ano}%27&@dataFinalCotacao=%27${mes+1}-${diaAtual}-${ano}%27&$top=1&$format=json&$select=cotacaoVenda`)
-
-    .then(resp => resp.json())
+fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${mes+1}-${diaAtual}-${ano}'&$top=100&$format=json&$select=cotacaoVenda`).then(resp => resp.json())
     .then(data => {
-    
+             
         const ValorAtualDolar = data.value[0].cotacaoVenda;
         
         const dolar =parseFloat(ValorAtualDolar.toFixed(2))-0.01;
@@ -44,6 +61,7 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
         brlInput.addEventListener('click', (e) => {
             if (e.target.value == "0,00") {
                 const comprimentoDoValor = e.target.value.length;
+                
                 // Define a posição inicial e final da seleção para o final do texto
                 e.target.setSelectionRange(comprimentoDoValor, comprimentoDoValor);
             }
@@ -53,6 +71,7 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
 
             if (e.target.value == "0.00") {
                 const comprimentoDoValor = e.target.value.length;
+                
                 // Define a posição inicial e final da seleção para o final do texto
                 e.target.setSelectionRange(comprimentoDoValor, comprimentoDoValor);
             }
