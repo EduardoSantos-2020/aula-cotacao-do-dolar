@@ -34,22 +34,39 @@ if(final>=2 && final<=5 && horaAtual<='17:12:00'){
 fetch('https://gist.githubusercontent.com/sistematico/0d795e73e133632204593f1d1db4a618/raw/7703b5651f888c91505e29f4fc033bc56774454a/feriados.json') 
  .then(resp => resp.json())
     .then(holiday => { 
-      const dates = Object.keys(holiday);
       let diaFeriado=false;      
-      const FeriadosNacionais = dates;
 
-      FeriadosNacionais.forEach((feriado,indice)=>{ 
-       if (dataAtual=="2025-11-06") { 
+      diasFeriados=Object.keys(holiday);
+      nomesFeriados=Object.values(holiday);
+     
+      diasFeriados.forEach((feriado,indice)=>{ 
+       if (diaAtual==feriado) { 
            diaFeriado=true;
-         }        
+           diaRecesso=nomesFeriados[indice]
+         }  
+         
        })
         
     if(diaFeriado){
-        diaAtual-=1
+         if (final==6) {
+             
+               diaAtual-=1;
+               
+         }else if(final==0){
+               
+               diaAtual-=3;
+               
+         }else{
+               
+               diaAtual-=1;
+          
+         }
+        
         if(diaAtual>=1 && diaAtual<=9){
             diaAtual="0"+diaAtual
         }
-     alert(`Cotação do Dolar esta dia o dia Anterior ${(diaAtual)+'/'+(mes+1)+'/'+ano}.`)
+        
+     alert(`Cotação do Dolar esta dia Anterior ${diaAtual+'/'+(mes+1)+'/'+ano} porquê hoje é dia ${diaRecesso}.`)
         
     }
  })
@@ -59,7 +76,7 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
              
         const ValorAtualDolar = data.value[0].cotacaoVenda;
         
-        const dolar =parseFloat(ValorAtualDolar.toFixed(2))-0.01;
+        const dolar =parseFloat(ValorAtualDolar.toFixed(2));
         
         const usdInput = document.getElementById('usd')
         const brlInput = document.getElementById('brl')
