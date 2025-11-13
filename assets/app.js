@@ -6,10 +6,8 @@ ano = date.getFullYear()
 
 const horaAtual = date.toLocaleTimeString(); 
 
-if(diaAtual>=1 && diaAtual<=9){
-    diaAtual='0'+diaAtual
+diaAtual>=1 && diaAtual<=9?diaAtual='0'+diaAtual:diaAtual
 
-}
 dataAtual=`${ano}-${mes+1}-${diaAtual}`;
 
 if (final===6) { //Para o dia no Sabado
@@ -62,9 +60,7 @@ fetch('https://gist.githubusercontent.com/sistematico/0d795e73e133632204593f1d1d
           
          }
         
-        if(diaAtual>=1 && diaAtual<=9){
-            diaAtual="0"+diaAtual
-        }
+     diaAtual>=1 && diaAtual<=9?diaAtual='0'+diaAtual:diaAtual
         
      alert(`Cotação do Dolar esta dia Anterior ${diaAtual+'/'+(mes+1)+'/'+ano} porquê hoje é dia ${diaRecesso}.`)
         
