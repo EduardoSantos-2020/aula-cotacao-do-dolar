@@ -46,18 +46,8 @@ fetch('https://gist.githubusercontent.com/sistematico/0d795e73e133632204593f1d1d
        })
         
     if(diaFeriado){
-         if (final==6) {
-             
+         if (!final==6 && !final==0) {
                diaAtual-=1;
-               
-         }else if(final==0){
-               
-               diaAtual-=3;
-               
-         }else{
-               
-               diaAtual-=1;
-          
          }
         
      diaAtual>=1 && diaAtual<=9?diaAtual='0'+diaAtual:diaAtual
