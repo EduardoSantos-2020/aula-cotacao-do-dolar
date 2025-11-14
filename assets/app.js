@@ -145,13 +145,19 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
 
         function convert(input, item) {
 
+        const aliquotaIOF = 0.0038; // 0,38% em formato decimal
+        const valorIOF = item * aliquotaIOF;
+
+
             if (input == "usd") {
                 number = (Math.round(item * dolar * 100) / 100).toFixed(2)
+                parseFloat(number)+valorIOF; 
                 brlInput.value = BRLreal.format(number);
             }
 
             if (input == "brl") {
-                number2 = Math.round(item / dolar * 100) / 100
+                number2 = Math.round(item / dolar * 100) / 100 
+                parseFloat(number2)+valorIOF;
                 usdInput.value = USDollar.format(number2);
             }
         }
