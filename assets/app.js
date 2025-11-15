@@ -147,15 +147,28 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
 
         const aliquotaIOF = 0.0038; // 0,38% em formato decimal
         const valorIOF = item * aliquotaIOF;
-
+        const valorTaxaCambio=0.0017;
+        valorTaxa=item*valorTaxaCambio
+        
+        item<=0.99?item=0:item
+    
+         if (item>1.99) {
+            item-=0.002
+        }
+                
             if (input == "usd") {
-                number = (Math.round(item * dolar * 100) / 100+valorIOF).toFixed(2)
+                
+                number = (Math.round(item * dolar * 100+valorIOF)/100).toFixed(2)
+        
                 brlInput.value = BRLreal.format(number);
             }
 
+
             if (input == "brl") {
-                number2 = Math.round(item / dolar+valorIOF * 100+valorIOF) / 100 
+               
+                number2 = Math.round(item / dolar+valorIOF * 100) / 100 
                 usdInput.value = USDollar.format(number2);
             }
+        
         }
     }).catch(error => console.log(error))
