@@ -18,13 +18,13 @@ if (final===0) { //Para o dia no Domingo
     diaAtual-=2 
 }
 
-// Para o dia Segunda-Feira antes das 17:12:00 da manhãm
-if(final===1 && horaAtual<='17:12:00'){ 
+// Para o dia Segunda-Feira antes das 10:12:00 da manhãm
+if(final===1 && horaAtual<='10:12:00'){ 
    diaAtual-=3 
 }
 
-// Para o dias Terça a Sexta antes das 17:12:00 da manhãm
-if(final>=2 && final<=5 && horaAtual<='17:12:00'){ 
+// Para o dias Terça a Sexta antes das 10:12:00 da manhãm
+if(final>=2 && final<=5 && horaAtual<='10:12:00'){ 
    diaAtual-=1
 }
 
@@ -61,6 +61,7 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
     .then(data => {
              
         const ValorAtualDolar = data.value[0].cotacaoVenda;
+        console.log(ValorAtualDolar)
         
         const dolar =parseFloat(ValorAtualDolar.toFixed(2));
         
@@ -149,7 +150,6 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
         const valorIOF = item * aliquotaIOF;
         const valorTaxaCambio=0.0017;
         valorTaxa=item*valorTaxaCambio
-        
         item<=0.99?item=0:item
     
          if (item>1.99) {
