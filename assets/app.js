@@ -1,81 +1,85 @@
 date = new Date()
-final=date.getDay()
+final = date.getDay()
 diaAtual = date.getDate()
 mes = date.getMonth()
 ano = date.getFullYear()
 
-const horaAtual = date.toLocaleTimeString(); 
+const horaAtual = date.toLocaleTimeString();
 
-diaAtual>=1 && diaAtual<=9?diaAtual='0'+diaAtual:diaAtual
+diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual
 
-dataAtual=`${ano}-${mes+1}-${diaAtual}`;
+dataAtual = `${ano}-${mes + 1}-${diaAtual}`;
 
-if (final===6) { //Para o dia no Sabado
-   diaAtual-=1
+if (final === 6) { //Para o dia no Sabado
+    diaAtual -= 1
 }
 
-if (final===0) { //Para o dia no Domingo
-    diaAtual-=2 
+if (final === 0) { //Para o dia no Domingo
+    diaAtual -= 2
 }
 
-// Para o dia Segunda-Feira antes das 10:12:00 da manhãm
-if(final===1 && horaAtual<='10:12:00'|| horaAtual>='17:12:00'){ 
-   diaAtual-=1
+// Para o dia Segunda-Feira antes das 10 horas da manhãm e 5 horas da tarde.
+if (final === 1 && horaAtual <= '10:12:00' || horaAtual >= '17:12:00') {
+    diaAtual -= 1
 }
 
-// Para o dias Terça a Sexta antes das 10:12:00 da manhãm
-if(final>=2 && final<=5 && horaAtual>='00:00:00' && horaAtual<='10:12:00'){ 
-   diaAtual-=1
+// Para o dias Terça a Sexta antes das 12 meia noite e 10 horas da manhãm.
+if (final >= 2 && final <= 5 && horaAtual >= '00:00:00' && horaAtual <= '10:12:00') {
+    diaAtual -= 1
 
 }
 
-if (final>=2 && final<=5 && horaAtual>='10:12:00' && horaAtual<='17:12:00') {
-    diaAtual+=1
+// Para o dias Terça a Sexta antes das 10 horas da manhãm e 5 horas da tarde.
+if (final >= 2 && final <= 5 && horaAtual >= '10:12:00' && horaAtual <= '17:12:00') {
+    diaAtual += 1
+
+
 }
 
-fetch('https://gist.githubusercontent.com/sistematico/0d795e73e133632204593f1d1db4a618/raw/7703b5651f888c91505e29f4fc033bc56774454a/feriados.json') 
- .then(resp => resp.json())
-    .then(holiday => { 
-      let diaFeriado=false;      
+fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
+    .then(resp => resp.json())
+    .then(holiday => {
+        let diaFeriado = false;
+        diasFeriados = holiday.data;
 
-      diasFeriados=Object.keys(holiday);
-      nomesFeriados=Object.values(holiday);
-     
-      diasFeriados.forEach((feriado,indice)=>{ 
-       if (diaAtual==feriado) { 
-           diaFeriado=true;
-           diaRecesso=nomesFeriados[indice]
-         }  
-         
-       })
-        
-    if(diaFeriado){
-         if (!final==6 && !final==0) {
-               diaAtual-=1;
-         }
-        
-     diaAtual>=1 && diaAtual<=9?diaAtual='0'+diaAtual:diaAtual
-        
-     alert(`Cotação do Dolar esta dia Anterior ${diaAtual+'/'+(mes+1)+'/'+ano} porquê hoje é dia ${diaRecesso}.`)
-        
-    }
- })
+        diasFeriados.forEach((feriado, indice) => {
+            nomesFeriados = feriado.nome;
+            dataFeriado = feriado.data;
 
-fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${mes+1}-${diaAtual}-${ano}'&$top=100&$format=json&$select=cotacaoVenda`).then(resp => resp.json())
+            if (dataAtual == dataFeriado) {
+                diaFeriado = true;
+                diaRecesso = nomesFeriados;
+            }
+
+        })
+
+        if (diaFeriado) {
+            if (!final == 6 && !final == 0) {
+                diaAtual -= 1;
+            }
+
+            diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual
+
+            alert(`Cotação do Dolar esta dia Anterior ${diaAtual + '/' + (mes + 1) + '/' + ano} porquê hoje é feriado  "${diaRecesso}" !`)
+
+        }
+    })
+
+fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${mes + 1}-${diaAtual}-${ano}'&$top=100&$format=json&$select=cotacaoVenda`).then(resp => resp.json())
     .then(data => {
-             
+
         const ValorAtualDolar = data.value[0].cotacaoVenda;
-        
-        
-        const dolar =parseFloat(ValorAtualDolar.toFixed(2));
-        
+
+
+        const dolar = parseFloat(ValorAtualDolar.toFixed(2));
+
         const usdInput = document.getElementById('usd')
         const brlInput = document.getElementById('brl')
 
         brlInput.addEventListener('click', (e) => {
             if (e.target.value == "0,00") {
                 const comprimentoDoValor = e.target.value.length;
-                
+
                 // Define a posição inicial e final da seleção para o final do texto
                 e.target.setSelectionRange(comprimentoDoValor, comprimentoDoValor);
             }
@@ -85,7 +89,7 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
 
             if (e.target.value == "0.00") {
                 const comprimentoDoValor = e.target.value.length;
-                
+
                 // Define a posição inicial e final da seleção para o final do texto
                 e.target.setSelectionRange(comprimentoDoValor, comprimentoDoValor);
             }
@@ -150,26 +154,26 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
 
         function convert(input, item) {
 
-        const aliquotaIOF = 0.0038; // 0,38% em formato decimal
-        const valorIOF = item * aliquotaIOF;
-        const valorTaxaCambio=0.0063;
-        valorTaxa=item*valorTaxaCambio
-       item<=0.99?item=0:item
+            const aliquotaIOF = 0.0038; // 0,38% em formato decimal
+            const valorIOF = item * aliquotaIOF;
+            const valorTaxaCambio = 0.0063;
+            valorTaxa = item * valorTaxaCambio
+            item <= 0.99 ? item = 0 : item
 
-                
+
             if (input == "usd") {
-                
-                number = (Math.ceil(item * dolar * 100-valorIOF)/100).toFixed(2)
-        
+
+                number = (Math.ceil(item * dolar * 100 - valorIOF) / 100).toFixed(2)
+
                 brlInput.value = BRLreal.format(number);
             }
 
 
             if (input == "brl") {
-               
-                number2 = Math.ceil(item / dolar-valorIOF * 100) / 100 
+
+                number2 = Math.ceil(item / dolar - valorIOF * 100) / 100
                 usdInput.value = USDollar.format(number2);
             }
-        
+
         }
     }).catch(error => console.log(error))
