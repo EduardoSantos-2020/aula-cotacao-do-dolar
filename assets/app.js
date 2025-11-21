@@ -19,15 +19,19 @@ if (final===0) { //Para o dia no Domingo
 }
 
 // Para o dia Segunda-Feira antes das 10:12:00 da manhãm
-if(final===1 && horaAtual<='10:12:00'){ 
-   diaAtual-=3 
-}
-
-// Para o dias Terça a Sexta antes das 10:12:00 da manhãm
-if(final>=2 && final<=5 && horaAtual<='10:12:00'){ 
+if(final===1 && horaAtual<='10:12:00'|| horaAtual>='17:12:00'){ 
    diaAtual-=1
 }
 
+// Para o dias Terça a Sexta antes das 10:12:00 da manhãm
+if(final>=2 && final<=5 && horaAtual>='00:00:00' && horaAtual<='10:12:00'){ 
+   diaAtual-=1
+
+}
+
+if (final>=2 && final<=5 && horaAtual>='10:12:00' && horaAtual<='17:12:00') {
+    diaAtual+=1
+}
 
 fetch('https://gist.githubusercontent.com/sistematico/0d795e73e133632204593f1d1db4a618/raw/7703b5651f888c91505e29f4fc033bc56774454a/feriados.json') 
  .then(resp => resp.json())
@@ -61,7 +65,7 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
     .then(data => {
              
         const ValorAtualDolar = data.value[0].cotacaoVenda;
-        console.log(ValorAtualDolar)
+        
         
         const dolar =parseFloat(ValorAtualDolar.toFixed(2));
         
@@ -148,17 +152,14 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
 
         const aliquotaIOF = 0.0038; // 0,38% em formato decimal
         const valorIOF = item * aliquotaIOF;
-        const valorTaxaCambio=0.0017;
+        const valorTaxaCambio=0.0063;
         valorTaxa=item*valorTaxaCambio
-        item<=0.99?item=0:item
-    
-         if (item>1.99) {
-            item-=0.002
-        }
+       item<=0.99?item=0:item
+
                 
             if (input == "usd") {
                 
-                number = (Math.round(item * dolar * 100+valorIOF)/100).toFixed(2)
+                number = (Math.ceil(item * dolar * 100-valorIOF)/100).toFixed(2)
         
                 brlInput.value = BRLreal.format(number);
             }
@@ -166,7 +167,7 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
 
             if (input == "brl") {
                
-                number2 = Math.round(item / dolar+valorIOF * 100) / 100 
+                number2 = Math.ceil(item / dolar-valorIOF * 100) / 100 
                 usdInput.value = USDollar.format(number2);
             }
         
