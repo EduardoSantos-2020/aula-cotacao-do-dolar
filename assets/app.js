@@ -35,6 +35,11 @@ if (final >= 2 && final <= 5 && horaAtual >= '10:12:00' && horaAtual <= '17:12:0
 
 
 }
+if (final === 0 && horaAtual >= '10:12:00' || horaAtual <= '17:12:00') {
+    diaAtual -= 1   
+}
+
+
 
 fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
     .then(resp => resp.json())
