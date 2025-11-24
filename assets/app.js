@@ -14,31 +14,24 @@ if (final === 6) { //Para o dia no Sabado
     diaAtual -= 1
 }
 
-if (final === 0) { //Para o dia no Domingo
+if (final === 0 && horaAtual <= '00:00:00') { //Para o dia no Domingo
     diaAtual -= 2
 }
 
-// Para o dia Segunda-Feira antes das 10 horas da manhãm e 5 horas da tarde.
-if (final === 1 && horaAtual <= '10:12:00' || horaAtual >= '17:12:00') {
-    diaAtual -= 1
+// Para o dia Segunda-Feira antes das 10 horas da manhãm 
+if (final === 1 && horaAtual <= '12:12:00' ) {
+    diaAtual -= 3
 }
 
 // Para o dias Terça a Sexta antes das 12 meia noite e 10 horas da manhãm.
 if (final >= 2 && final <= 5 && horaAtual >= '00:00:00' && horaAtual <= '10:12:00') {
     diaAtual -= 1
-
 }
 
 // Para o dias Terça a Sexta antes das 10 horas da manhãm e 5 horas da tarde.
 if (final >= 2 && final <= 5 && horaAtual >= '10:12:00' && horaAtual <= '17:12:00') {
     diaAtual += 1
-
-
 }
-if (final === 0 && horaAtual >= '10:12:00' || horaAtual <= '17:12:00') {
-    diaAtual -= 1   
-}
-
 
 
 fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
