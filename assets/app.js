@@ -18,7 +18,7 @@ if (final === 0 && horaAtual <= '00:00:00') { //Para o dia no Domingo
     diaAtual -= 2
 }
 
-// Para o dia Segunda-Feira antes das 10 horas da manhãm 
+// Para o dia Segunda-Feira antes dos 12 dia.
 if (final === 1 && horaAtual <= '12:12:00' ) {
     diaAtual -= 3
 }
@@ -28,11 +28,10 @@ if (final >= 2 && final <= 5 && horaAtual >= '00:00:00' && horaAtual <= '10:12:0
     diaAtual -= 1
 }
 
-// Para o dias Terça a Sexta antes das 10 horas da manhãm e 5 horas da tarde.
-if (final >= 2 && final <= 5 && horaAtual >= '10:12:00' && horaAtual <= '17:12:00') {
-    diaAtual += 1
+// Para o dias Terça a Sexta antes das 12 meio dia e 5 horas da tarde.
+if (final >= 2 && final <= 5 && horaAtual >= '12:12:00' && horaAtual <= '17:12:00') {
+    diaAtual = diaAtual     
 }
-
 
 fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
     .then(resp => resp.json())
