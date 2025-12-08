@@ -3,8 +3,13 @@ final = date.getDay()
 diaAtual = date.getDate()
 mes = date.getMonth()
 ano = date.getFullYear()
+lastDayMonth=new Date(ano, mes , 0);
 
 const horaAtual = date.toLocaleTimeString();
+
+if (diaAtual==1 && horaAtual<='12:00:00') {
+   diaAtual = lastDayMonth.getDate();
+}
 
 diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual
 
@@ -14,12 +19,14 @@ if (final === 6) { //Para o dia no Sabado
     diaAtual -= 1
 }
 
-if (final === 0 && horaAtual <= '00:00:00') { //Para o dia no Domingo
+if (final === 0 && horaAtual >= '00:00:00' && horaAtual <= '23:59:00') { //Para o dia no Domingo
     diaAtual -= 2
 }
 
+
+
 // Para o dia Segunda-Feira antes dos 12 dia.
-if (final === 1 && horaAtual <= '12:12:00' ) {
+if (final === 1 && horaAtual <= '17:12:00' ) {
     diaAtual -= 3
 }
 
@@ -32,6 +39,7 @@ if (final >= 2 && final <= 5 && horaAtual >= '00:00:00' && horaAtual <= '10:12:0
 if (final >= 2 && final <= 5 && horaAtual >= '12:12:00' && horaAtual <= '17:12:00') {
     diaAtual = diaAtual     
 }
+
 
 fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
     .then(resp => resp.json())
@@ -46,6 +54,10 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
             if (dataAtual == dataFeriado) {
                 diaFeriado = true;
                 diaRecesso = nomesFeriados;
+
+            if (diaAtual==1 && horaAtual<='12:00:00') {
+                diaAtual = lastDayMonth.getDate()-1;
+}
             }
 
         })
@@ -62,7 +74,7 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
         }
     })
 
-fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${mes + 1}-${diaAtual}-${ano}'&$top=100&$format=json&$select=cotacaoVenda`).then(resp => resp.json())
+fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${mes+1}-${diaAtual}-${ano}'&$top=100&$format=json&$select=cotacaoVenda`).then(resp => resp.json())
     .then(data => {
 
         const ValorAtualDolar = data.value[0].cotacaoVenda;
