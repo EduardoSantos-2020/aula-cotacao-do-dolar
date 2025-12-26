@@ -1,91 +1,115 @@
 date = new Date()
 final = date.getDay()
-diaAtual = date.getDate()
+diaAtual = 25
 mes = date.getMonth()
 ano = date.getFullYear()
 lastDayMonth=new Date(ano, mes , 0);
-
+dataAtual = `${ano}-${mes + 1}-${date.getDate()}`;
 const horaAtual = date.toLocaleTimeString();
 
-// caso for dia 1 antes do meio dia retorna para utimo dia do mes
-if (diaAtual==1 && horaAtual<='12:00:00') {
-   diaAtual = lastDayMonth.getDate();
+
+function dayValid(diaFeriado,diaRecesso) {
+console.log(diaAtual);
+
+    if (diaFeriado&& diaRecesso!='') { 
+        if (!final == 6 && !final == 0) {
+            diaAtual -= 1;           
+       }
+       
+       diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual
+       
+       alert(`Cotação do Dolar esta dia Anterior ${(diaAtual) + '/' + (mes + 1) + '/' + ano} porquê hoje é feriado "${diaRecesso}" !`)
+       
+       console.log(diaAtual);
+       
+       return diaAtual+=1
+    
+       
+    }else {
+
+
+        // caso for dia 1 antes do meio dia retorna para utimo dia do mes
+    if (diaAtual==1 && horaAtual<='12:00:00') {
+       diaAtual = lastDayMonth.getDate();
+    }
+    
+    diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual
+    
+    
+    //Para o dia no Sabado//////////////////
+    if (final === 6) { 
+        diaAtual -= 1
+    }
+    ////////////////////////////////////////
+    
+    
+    //Para o dia no Domingo/////////////////
+    if (final === 0 && horaAtual >= '00:00:00' && horaAtual <= '23:59:00') { 
+        diaAtual -= 2
+    }
+    /////////////////////////////////////////
+    
+    // Para o dia Segunda-Feira depois das cinco horas da tarde 
+    if (final === 1 && horaAtual <= '17:12:00' ) {
+        diaAtual -= 3
+    }
+    
+    // Para o dias Terça a Sexta depois meia noite e depois do meio dia.
+    if (final >= 2 && final <= 5 && horaAtual >= '00:00:00' && horaAtual <= '12:12:00') {
+        diaAtual -= 1
+    }
+    
+    // Para o dias Terça a Sexta depois do meio dia e antes das cinco horas da tarde.
+    if (final >= 2 && final <= 5 && horaAtual >= '12:12:00' && horaAtual <= '17:12:00') {
+        diaAtual = diaAtual
+    }
+    return diaAtual
+}
 }
 
-diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual
-
-dataAtual = `${ano}-${mes + 1}-${diaAtual}`;
-
-//Para o dia no Sabado//////////////////
-if (final === 6) { 
-    diaAtual -= 1
-}
-////////////////////////////////////////
+const dayAction=dayValid()
 
 
-//Para o dia no Domingo/////////////////
-if (final === 0 && horaAtual >= '00:00:00' && horaAtual <= '23:59:00') { 
-    diaAtual -= 2
-}
-/////////////////////////////////////////
 
-// Para o dia Segunda-Feira depois das cinco horas da tarde 
-if (final === 1 && horaAtual <= '17:12:00' ) {
-    diaAtual -= 3
-}
+    fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
+       .then(resp => resp.json())
+       .then(holiday => {
+           
+           diasFeriados = holiday.data;
+           
+           diasFeriados.forEach((feriado, indice) => {
+               nomesFeriados = feriado.nome;
+               
+               dataFeriado = feriado.data;
+        
+            
+               if ('2025-12-25' == dataFeriado) {
+                   diaFeriado = true;
+                   diaRecesso = nomesFeriados;
+                
+               
+                   if (diaAtual==1 && horaAtual<='12:00:00') {
+                       diaAtual = lastDayMonth.getDate()-1;
+                    }
+                    
+                    dayValid(diaFeriado,diaRecesso)
+                 
 
-// Para o dias Terça a Sexta depois meia noite e depois do meio dia.
-if (final >= 2 && final <= 5 && horaAtual >= '00:00:00' && horaAtual <= '12:12:00') {
-    diaAtual -= 1
-}
-
-// Para o dias Terça a Sexta depois do meio dia e antes das cinco horas da tarde.
-if (final >= 2 && final <= 5 && horaAtual >= '12:12:00' && horaAtual <= '17:12:00') {
-    diaAtual = diaAtual
-}
-
-
-fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
-    .then(resp => resp.json())
-    .then(holiday => {
-        let diaFeriado = false;
-        diasFeriados = holiday.data;
-
-        diasFeriados.forEach((feriado, indice) => {
-            nomesFeriados = feriado.nome;
-            dataFeriado = feriado.data;
-
-            if (dataAtual == dataFeriado) {
-                diaFeriado = true;
-                diaRecesso = nomesFeriados;
-
-            if (diaAtual==1 && horaAtual<='12:00:00') {
-                diaAtual = lastDayMonth.getDate()-1;
-}
-            }
-
+                }    
+            })      
+            
         })
+        
 
-        if (diaFeriado) {
-            if (!final == 6 && !final == 0) {
-                diaAtual -= 1;
-            }
-
-            diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual
-
-            alert(`Cotação do Dolar esta dia Anterior ${diaAtual + '/' + (mes + 1) + '/' + ano} porquê hoje é feriado  "${diaRecesso}" !`)
-
-        }
-    })
-
-fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${mes+1}-${diaAtual}-${ano}'&$top=100&$format=json&$select=cotacaoVenda`).then(resp => resp.json())
-    .then(data => {
+        
+        fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${mes+1}-${dayAction}-${ano}'&$top=100&$format=json&$select=cotacaoVenda`).then(resp => resp.json())
+        .then(data => {
 
         const ValorAtualDolar = data.value[0].cotacaoVenda;
-
-
+        
+        
         const dolar = parseFloat(ValorAtualDolar.toFixed(2));
-
+        
         const usdInput = document.getElementById('usd')
         const brlInput = document.getElementById('brl')
 
@@ -148,7 +172,7 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
 
             // Remove tudo que não for número
             let value = e.target.value.replace(/\D/g, '');
-
+            
             // Garante que tem pelo menos 3 dígitos (para 0.00)
             value = value.padStart(3, '0');
 
@@ -187,3 +211,5 @@ fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDola
             }
         }
     }).catch(error => console.log(error))
+
+              
