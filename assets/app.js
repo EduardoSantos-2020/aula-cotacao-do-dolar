@@ -1,8 +1,8 @@
-date = new Date()
-final = date.getDay()
-diaAtual = date.getDate()
-mes = date.getMonth()
-ano = date.getFullYear()
+date = new Date();
+final = date.getDay();
+diaAtual = date.getDate();
+mes = date.getMonth();
+ano = date.getFullYear();
 lastDayMonth = new Date(ano, mes, 0);
 dataAtual = `${ano}-${mes + 1}-${date.getDate()}`;
 const horaAtual = date.toLocaleTimeString();
@@ -10,18 +10,17 @@ const horaAtual = date.toLocaleTimeString();
 function dayValid(diaFeriado, diaRecesso) {
 
     if (diaFeriado && diaRecesso>'') {
+        diaAtual -= 1;
 
-        diaAtual -= 1
-
-        if (!final == 6 && !final == 0) {
-            return diaAtual -= 1;
-        }
+            if (!final == 6 && !final == 0) {
+            diaAtual -= 1;
+            }
 
         diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual
 
         alert(`Cotação do Dolar esta dia Anterior ${(diaAtual) + '/' + (mes + 1) + '/' + ano} porquê hoje é feriado "${diaRecesso}" !`)
 
-        return diaAtual
+        return diaAtual;
 
     } else {
 
@@ -36,32 +35,33 @@ function dayValid(diaFeriado, diaRecesso) {
 
         //Para o dia no Sabado//////////////////
         if (final === 6) {
-             console.log(diaAtual);
-            return diaAtual -= 1
+            diaAtual -= 1;
         }
         ////////////////////////////////////////
 
 
         //Para o dia no Domingo/////////////////
         if (final === 0 && horaAtual >= '00:00:00' && horaAtual <= '23:59:00') {
-            return diaAtual -= 2
+            diaAtual -= 2;
         }
         /////////////////////////////////////////
 
         // Para o dia Segunda-Feira depois das cinco horas da tarde 
         if (final === 1 && horaAtual <= '17:12:00') {
-            return diaAtual -= 3
+            diaAtual -= 3;
         }
 
         // Para o dias Terça a Sexta depois meia noite e depois do meio dia.
         if (final >= 2 && final <= 5 && horaAtual >= '00:00:00' && horaAtual <= '12:12:00') {
-            return diaAtual -= 1
+            diaAtual -= 1;
         }
 
         // Para o dias Terça a Sexta depois do meio dia e antes das cinco horas da tarde.
         if (final >= 2 && final <= 5 && horaAtual >= '12:12:00' && horaAtual <= '17:12:00') {
-            return diaAtual
+            diaAtual;
         }
+
+        return diaAtual;
     }
 
 
@@ -71,11 +71,11 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
     .then(resp => resp.json())
     .then(holiday => {
 
-        let resposte = []
+        let parametersHoliday= [];
 
         diasFeriados = holiday.data;
         diaFeriado = false;
-        DayAction=dayValid(resposte[0], resposte[1])
+        DayAction=dayValid(parametersHoliday[0], parametersHoliday[1]);
 
 
         diasFeriados.map((feriado, indice) => {
@@ -89,10 +89,10 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
                 if (diaAtual == 1 && horaAtual <= '12:00:00') {
                     diaAtual = lastDayMonth.getDate() - 1;
                 }
-                resposte.push(diaFeriado,diaRecesso)
+                parametersHoliday.push(diaFeriado,diaRecesso);
             }else{
 
-                resposte.push(diaFeriado,'')
+                parametersHoliday.push(diaFeriado,'');
             }
         })
 
@@ -104,8 +104,8 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
 
                 const dolar = parseFloat(ValorAtualDolar.toFixed(2));
 
-                const usdInput = document.getElementById('usd')
-                const brlInput = document.getElementById('brl')
+                const usdInput = document.getElementById('usd');
+                const brlInput = document.getElementById('brl');
 
                 brlInput.addEventListener('click', (e) => {
                     if (e.target.value == "0,00") {
@@ -133,7 +133,7 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
 
                 usdInput.addEventListener('keyup', (e) => {
 
-                    let inputActive = e.target.id
+                    let inputActive = e.target.id;
 
                     // Remove tudo que não for número
                     let value = e.target.value.replace(/\D/g, '');
@@ -152,7 +152,7 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
                     // Atualiza o valor formatado
                     e.target.value = USDollar.format(number);
 
-                    convert(inputActive, valorDigitado1)
+                    convert(inputActive, valorDigitado1);
                 })
 
                 const BRLreal = new Intl.NumberFormat('pt-BR', {
@@ -162,7 +162,7 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
 
                 brlInput.addEventListener('keyup', (e) => {
 
-                    let inputActive = e.target.id
+                    let inputActive = e.target.id;
 
                     // Remove tudo que não for número
                     let value = e.target.value.replace(/\D/g, '');
@@ -180,7 +180,7 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
                     // Atualiza o valor formatado
                     e.target.value = BRLreal.format(number);
 
-                    convert(inputActive, valorDigitado2)
+                    convert(inputActive, valorDigitado2);
                 })
 
                 function convert(input, item) {
@@ -189,8 +189,8 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
                     const valorIOF = item * aliquotaIOF;
                     const valorTaxaCambio = 0.0063;
 
-                    valorTaxa = item * valorTaxaCambio
-                    item <= 0.99 ? item = 0 : item
+                    valorTaxa = item * valorTaxaCambio;
+                    item <= 0.99 ? item = 0 : item;
 
                     if (input == "usd") {
 
@@ -204,6 +204,6 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
                         usdInput.value = USDollar.format(number2);
                     }
                 }
-            }).catch(error => alert(error))
+            }).catch(error => alert('Erro ao buscar dados da cotação atual do Banco Central  do Brasil.'));
     })
 
