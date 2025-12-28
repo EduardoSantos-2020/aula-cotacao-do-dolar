@@ -10,12 +10,20 @@ const horaAtual = date.toLocaleTimeString();
 
 function dayValid(diaFeriado,diaRecesso) {
 
-    if (diaFeriado && diaRecesso>'') {
-        diaAtual -= 1;
+    if (diaFeriado && diaRecesso>'') {  
 
-            if (!final == 6 && !final == 0) {
+        if (final === 6) {
+            // Se for Sabado e feriado for verdadeiro
             diaAtual -= 1;
-            }
+
+        } else if (final === 0) {
+            // Se for Domingo e feriado for verdadeiro
+            diaAtual -= 2;
+        }
+        else{      
+             // Se for na semana e feriado for verdadeiro
+            diaAtual -= 1;
+        }
 
         diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual
 
