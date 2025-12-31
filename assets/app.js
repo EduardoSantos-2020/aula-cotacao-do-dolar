@@ -96,13 +96,7 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
             if (dataAtual == dataFeriado ) {
                 diaFeriado = true;
                 diaRecesso = nomesFeriados;
-                
-                if (diaAtual == 1 && horaAtual <= '12:00:00') {
-                    diaAtual = lastDayMonth.getDate() - 1;
-                }
-                
                 parametersHoliday.push(diaFeriado,diaRecesso);
-
             } 
 
         })
