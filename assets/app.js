@@ -1,12 +1,11 @@
 date = new Date();
 final = date.getDay();
-//final=5;
 diaAtual = date.getDate();
-//diaAtual=25;
 mes = date.getMonth();
 mesBrl = mes+1;
 ano = date.getFullYear();
 lastDayMonth = new Date(ano, mes, 0);
+
 dataAtual = `${ano}-${mesBrl}-${date.getDate()}`;
 const horaAtual = date.toLocaleTimeString();
 
@@ -14,7 +13,7 @@ function dayValid(diaFeriado,diaRecesso) {
 
     if (diaFeriado && diaRecesso>'') {  
 
-        if (final === 6) {
+        if (final === 6 ) {
             // Se for Sabado e feriado for verdadeiro
             diaAtual -= 1;
 
@@ -24,15 +23,24 @@ function dayValid(diaFeriado,diaRecesso) {
         }
         else{      
              // Se for na semana e feriado for verdadeiro
-            diaAtual -= 1;
+             if (diaAtual>=1) {
+                dataAtual
+             }else{
+                 diaAtual -= 1;
+             }
         }
-        
-          if (diaAtual == 1 && horaAtual <= '23:59:59') {
-            diaAtual = lastDayMonth.getDate();
 
-        }
+
+    // caso for dia 1 ou 2 antes do meia noite e meio dia retorna para utimo dia e mes e ano
+            if (diaAtual == 1  && horaAtual <= '23:59:59'|| final >= 2 && final <= 5 &&     diaAtual==2 && horaAtual <= '12:12:00') {
+                diaAtual = lastDayMonth.getDate();
+                mesBrl=lastDayMonth.getMonth()+1;
+                ano=lastDayMonth.getFullYear();
+            }
+
 
         diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual
+        mesBrl >= 1 && mesBrl <= 9 ? mesBrl = '0' + mesBrl : mesBrl
         
         alert(`Cotação do Dolar esta dia Anterior ${diaAtual + '/' + mesBrl + '/' + ano} porquê hoje é feriado "${diaRecesso}" !`)
 
@@ -40,13 +48,8 @@ function dayValid(diaFeriado,diaRecesso) {
 
     } else {
 
-        // caso for dia 1 antes do meio dia retorna para utimo dia do mes
-        if (diaAtual == 1 && horaAtual <= '12:00:00') {
-            diaAtual = lastDayMonth.getDate();
-
-        }
-
         diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual
+        mesBrl >= 1 && mesBrl <= 9 ? mesBrl = '0' + mesBrl : mesBrl
 
 
         //Para o dia no Sabado//////////////////
@@ -54,7 +57,6 @@ function dayValid(diaFeriado,diaRecesso) {
             diaAtual -= 1;
         }
         ////////////////////////////////////////
-
 
         //Para o dia no Domingo/////////////////
         if (final === 0 && horaAtual >= '00:00:00' && horaAtual <= '23:59:00') {
@@ -76,10 +78,9 @@ function dayValid(diaFeriado,diaRecesso) {
         if (final >= 2 && final <= 5 && horaAtual >= '12:12:00' && horaAtual <= '17:12:00') {
             diaAtual;
         }
-
+        
         return diaAtual;
     }
-
 }
 
 fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
@@ -93,7 +94,7 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
             nomesFeriados = feriado.nome;
             dataFeriado = feriado.data;           
             
-            if (dataAtual == dataFeriado ) {
+            if (diaAtual==dataFeriado) {
                 diaFeriado = true;
                 diaRecesso = nomesFeriados;
                 parametersHoliday.push(diaFeriado,diaRecesso);
