@@ -39,7 +39,6 @@ function dayValid(diaFeriado,diaRecesso) {
                diaAtual = lastDayMonth.getDate();
                 mesBrl=lastDayMonth.getMonth()+1;
                 ano=lastDayMonth.getFullYear();
-                
             }
         
         alert(`Cotação do Dolar esta dia Anterior ${diaAtual + '/' + mesBrl + '/' + ano} porquê hoje é feriado "${diaRecesso}" !`)
@@ -52,7 +51,7 @@ function dayValid(diaFeriado,diaRecesso) {
         if (final === 6) {
             diaAtual -= 1;
         }
-        ////////////////////////////////////////
+        ////////////r////////////////////////////
 
         //Para o dia no Domingo/////////////////
         if (final === 0 && horaAtual >= '00:00:00' && horaAtual <= '23:59:00') {
@@ -62,7 +61,13 @@ function dayValid(diaFeriado,diaRecesso) {
 
         // Para o dia Segunda-Feira depois das cinco horas da tarde 
         if (final === 1 && horaAtual <= '17:12:00') {
-            diaAtual -= 3;
+          if (diaAtual == 1 && horaAtual <= '23:59:59' || diaAtual == 2 && horaAtual <= '12:12:00') {
+                diaAtual = lastDayMonth.getDate()-2;
+                mesBrl = lastDayMonth.getMonth() + 1;
+                ano = lastDayMonth.getFullYear();
+          }else{
+              diaAtual-=3
+          }
         }
 
         // Para o dias Terça a Sexta depois meia noite e depois do meio dia.
@@ -76,8 +81,10 @@ function dayValid(diaFeriado,diaRecesso) {
         }
         
         return diaAtual;
+        
     }
 } 
+
 
 fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
     .then(resp => resp.json())
@@ -100,7 +107,9 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
         if (!diaFeriado) {
             parametersHoliday.push(diaFeriado,'');
         };
+    
         DayAction=dayValid(parametersHoliday[0], parametersHoliday[1]);
+        
         fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${mesBrl}-${DayAction}-${ano}'&$top=100&$format=json&$select=cotacaoVenda`).then(resp => resp.json())
             .then(data => {
 
