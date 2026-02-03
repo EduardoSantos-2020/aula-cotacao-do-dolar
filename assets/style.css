@@ -70,7 +70,7 @@ main section input {
     font-weight: bold;
     border: 0;
     outline: none;
-    caret-color: #000;
+    caret-color: var(--secondary-light);
     caret-shape:block;
     text-align: right;
 }
