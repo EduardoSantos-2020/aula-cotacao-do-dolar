@@ -20,17 +20,16 @@ function dayValid(diaFeriado,diaRecesso) {
         if (final === 6 ) {
             // Se for Sabado e feriado for verdadeiro
             diaAtual -= 1;
-
         } else if (final === 0) {
             // Se for Domingo e feriado for verdadeiro
             diaAtual -= 2;
-        }
-        else{      
+        }else{      
              // Se for na semana e feriado for verdadeiro
-             if (diaAtual>=1) {
-                dataAtual
-             }else{
-                 diaAtual -= 1;
+             if (diaAtual==1) {
+                diaAtual=lastDayMonth.getDate()-1
+                mesBrl-=1;
+            }else{
+                diaAtual -= 1;
              }
         }
 
@@ -49,13 +48,22 @@ function dayValid(diaFeriado,diaRecesso) {
 
         //Para o dia no Sabado//////////////////
         if (final === 6) {
-            diaAtual -= 1;
+            diaAtual -= 1;  
+
         }
         ////////////r////////////////////////////
 
         //Para o dia no Domingo/////////////////
         if (final === 0 && horaAtual >= '00:00:00' && horaAtual <= '23:59:00') {
-            diaAtual -= 2;
+           
+            if (diaAtual==1) {
+
+                diaAtual=lastDayMonth.getDate()-1
+                mesBrl-=1;
+                 
+            }else{
+                 diaAtual -= 2;
+            }
         }
         /////////////////////////////////////////
 
@@ -79,7 +87,7 @@ function dayValid(diaFeriado,diaRecesso) {
         if (final >= 2 && final <= 5 && horaAtual >= '12:12:00' && horaAtual <= '17:12:00') {
             diaAtual;
         }
-
+    
         return diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual;
         
     }
@@ -110,11 +118,11 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
     
         DayAction=dayValid(parametersHoliday[0], parametersHoliday[1]);
 
+
         fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${mesBrl}-${DayAction}-${ano}'&$top=100&$format=json&$select=cotacaoVenda`).then(resp => resp.json())
             .then(data => {
-
+          
                 const ValorAtualDolar = data.value[0].cotacaoVenda;
-
 
                 const dolar = parseFloat(ValorAtualDolar.toFixed(2));
 
@@ -218,6 +226,6 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
                         usdInput.value = USDollar.format(number2);
                     }
                 }
-            }).catch(error => alert('Erro ao buscar dados da cotação atual do Banco Central  do Brasil.'));
+            })
     })
 
