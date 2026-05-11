@@ -51,7 +51,7 @@ function dayValid(diaFeriado,diaRecesso) {
             diaAtual -= 1;  
 
         }
-        ////////////r////////////////////////////
+        ////////////////////////////////////////
 
         //Para o dia no Domingo/////////////////
         if (final === 0 && horaAtual >= '00:00:00' && horaAtual <= '23:59:00') {
@@ -94,7 +94,7 @@ function dayValid(diaFeriado,diaRecesso) {
 } 
 
 
-fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
+fetch(`http://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
     .then(resp => resp.json())
     .then(holiday => {
     let parametersHoliday= [];
@@ -118,10 +118,11 @@ fetch(`https://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
     
         DayAction=dayValid(parametersHoliday[0], parametersHoliday[1]);
 
+console.log(DayAction);
 
         fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${mesBrl}-${DayAction}-${ano}'&$top=100&$format=json&$select=cotacaoVenda`).then(resp => resp.json())
             .then(data => {
-          
+
                 const ValorAtualDolar = data.value[0].cotacaoVenda;
 
                 const dolar = parseFloat(ValorAtualDolar.toFixed(2));
