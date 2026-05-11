@@ -2,7 +2,7 @@ date = new Date();
 final = date.getDay();
 diaAtual = date.getDate()
 mes = date.getMonth();
-mesBrl = mes+1;
+mesBrl = mes + 1;
 mesBrl >= 1 && mesBrl <= 9 ? mesBrl = '0' + mesBrl : mesBrl
 ano = date.getFullYear();
 
@@ -12,34 +12,33 @@ dataAtual = `${ano}-${mesBrl}-${diaAtual}`;
 
 const horaAtual = date.toLocaleTimeString();
 
-function dayValid(diaFeriado,diaRecesso) {
+function dayValid(diaFeriado, diaRecesso) {
 
-    
-    if (diaFeriado && diaRecesso>'') {  
+    if (diaFeriado && diaRecesso > '') {
 
-        if (final === 6 ) {
+        if (final === 6) {
             // Se for Sabado e feriado for verdadeiro
             diaAtual -= 1;
         } else if (final === 0) {
             // Se for Domingo e feriado for verdadeiro
             diaAtual -= 2;
-        }else{      
-             // Se for na semana e feriado for verdadeiro
-             if (diaAtual==1) {
-                diaAtual=lastDayMonth.getDate()-1
-                mesBrl-=1;
-            }else{
+        } else {
+            // Se for na semana e feriado for verdadeiro
+            if (diaAtual == 1) {
+                diaAtual = lastDayMonth.getDate() - 1
+                mesBrl -= 1;
+            } else {
                 diaAtual -= 1;
-             }
+            }
         }
 
-    // caso for dia 1 ou 2 antes do meia noite e meio dia retorna para utimo dia e mes e ano
-            if (diaAtual == 1  && horaAtual <= '23:59:59' || diaAtual==2 && horaAtual <= '12:12:00'){
-               diaAtual = lastDayMonth.getDate();
-                mesBrl=lastDayMonth.getMonth()+1;
-                ano=lastDayMonth.getFullYear();
-            }
-        
+        // caso for dia 1 ou 2 antes do meia noite e meio dia retorna para utimo dia e mes e ano
+        if (diaAtual == 1 && horaAtual <= '23:59:59' || diaAtual == 2 && horaAtual <= '12:12:00') {
+            diaAtual = lastDayMonth.getDate();
+            mesBrl = lastDayMonth.getMonth() + 1;
+            ano = lastDayMonth.getFullYear();
+        }
+
         alert(`Cotação do Dolar esta dia Anterior ${diaAtual + '/' + mesBrl + '/' + ano} porquê hoje é feriado "${diaRecesso}" !`)
 
         return diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual;
@@ -48,34 +47,34 @@ function dayValid(diaFeriado,diaRecesso) {
 
         //Para o dia no Sabado//////////////////
         if (final === 6) {
-            diaAtual -= 1;  
+            diaAtual -= 1;
 
         }
         ////////////////////////////////////////
 
         //Para o dia no Domingo/////////////////
         if (final === 0 && horaAtual >= '00:00:00' && horaAtual <= '23:59:00') {
-           
-            if (diaAtual==1) {
 
-                diaAtual=lastDayMonth.getDate()-1
-                mesBrl-=1;
-                 
-            }else{
-                 diaAtual -= 2;
+            if (diaAtual == 1) {
+
+                diaAtual = lastDayMonth.getDate() - 1
+                mesBrl -= 1;
+
+            } else {
+                diaAtual -= 2;
             }
         }
         /////////////////////////////////////////
 
         // Para o dia Segunda-Feira depois das cinco horas da tarde 
         if (final === 1 && horaAtual <= '17:12:00') {
-          if (diaAtual == 1 && horaAtual <= '23:59:59' || diaAtual == 2 && horaAtual <= '12:12:00') {
-                diaAtual = lastDayMonth.getDate()-2;
+            if (diaAtual == 1 && horaAtual <= '23:59:59' || diaAtual == 2 && horaAtual <= '12:12:00') {
+                diaAtual = lastDayMonth.getDate() - 2;
                 mesBrl = lastDayMonth.getMonth() + 1;
                 ano = lastDayMonth.getFullYear();
-          }else{
-              diaAtual-=3
-          }
+            } else {
+                diaAtual -= 3
+            }
         }
 
         // Para o dias Terça a Sexta depois meia noite e depois do meio dia.
@@ -87,38 +86,36 @@ function dayValid(diaFeriado,diaRecesso) {
         if (final >= 2 && final <= 5 && horaAtual >= '12:12:00' && horaAtual <= '17:12:00') {
             diaAtual;
         }
-    
+
         return diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual;
-        
+
     }
-} 
+}
 
 
 fetch(`http://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
     .then(resp => resp.json())
     .then(holiday => {
-    let parametersHoliday= [];
+        let parametersHoliday = [];
         diasFeriados = holiday.data;
         diaFeriado = false;
         diasFeriados.map((feriado, indice) => {
             nomesFeriados = feriado.nome;
-            dataFeriado = feriado.data;           
-            
-            if (dataAtual==dataFeriado) {
+            dataFeriado = feriado.data;
+
+            if (dataAtual == dataFeriado) {
                 diaFeriado = true;
                 diaRecesso = nomesFeriados;
-                parametersHoliday.push(diaFeriado,diaRecesso);
-            } 
+                parametersHoliday.push(diaFeriado, diaRecesso);
+            }
 
         })
-        
-        if (!diaFeriado) {
-            parametersHoliday.push(diaFeriado,'');
-        };
-    
-        DayAction=dayValid(parametersHoliday[0], parametersHoliday[1]);
 
-console.log(DayAction);
+        if (!diaFeriado) {
+            parametersHoliday.push(diaFeriado, '');
+        };
+
+        DayAction = dayValid(parametersHoliday[0], parametersHoliday[1]);
 
         fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${mesBrl}-${DayAction}-${ano}'&$top=100&$format=json&$select=cotacaoVenda`).then(resp => resp.json())
             .then(data => {
