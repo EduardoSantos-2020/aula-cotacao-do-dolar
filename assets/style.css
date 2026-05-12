@@ -75,6 +75,13 @@ main section input {
     text-align: right;
 }
 
+.swal2-confirm{
+    background-color: #01a51c;
+}
+.swal2-confirm:hover ,.swal2-confirm:active{
+    background-color: #00C820;
+}
+
 footer {
     text-align: center;
     font-size: 1.4rem;

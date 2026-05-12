@@ -39,7 +39,10 @@ function dayValid(diaFeriado, diaRecesso) {
             ano = lastDayMonth.getFullYear();
         }
 
-        alert(`Cotação do Dolar esta dia Anterior ${diaAtual + '/' + mesBrl + '/' + ano} porquê hoje é feriado "${diaRecesso}" !`)
+          Swal.fire({
+            position: 'top',
+            title: `Cotação do Dolar esta dia Anterior ${diaAtual + '/' + mesBrl + '/' + ano} porquê hoje é feriado "${diaRecesso}" !`
+        });
 
         return diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual;
 
@@ -86,7 +89,7 @@ function dayValid(diaFeriado, diaRecesso) {
         if (final >= 2 && final <= 5 && horaAtual >= '12:12:00' && horaAtual <= '17:12:00') {
             diaAtual;
         }
-
+        
         return diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual;
 
     }
@@ -116,6 +119,11 @@ fetch(`http://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
         };
 
         DayAction = dayValid(parametersHoliday[0], parametersHoliday[1]);
+
+        Swal.fire({
+            position: 'top',
+            title: `A cotação do dólar esta do dia  ${DayAction}/${mesBrl}/${ano}.`
+        });
 
         fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${mesBrl}-${DayAction}-${ano}'&$top=100&$format=json&$select=cotacaoVenda`).then(resp => resp.json())
             .then(data => {
