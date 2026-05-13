@@ -114,9 +114,7 @@ fetch('https://rodriguesfas.github.io/holidays/national.json')
             nomesFeriados = feriado.title;
             dataFeriado = feriado.date + '-' + ano;
 
-
-
-            if (dataAtual == +dataFeriado) {
+            if (dataAtual == dataFeriado) {
                 diaFeriado = true;
                 diaRecesso = nomesFeriados;
                 parametersHoliday.push(diaFeriado, diaRecesso);
