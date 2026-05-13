@@ -8,7 +8,7 @@ ano = date.getFullYear();
 
 lastDayMonth = new Date(ano, mes, 0);
 
-dataAtual = `${ano}-${mesBrl}-${diaAtual}`;
+dataAtual = `${diaAtual}-${mesBrl}-${ano}`;
 
 const horaAtual = date.toLocaleTimeString();
 
@@ -39,8 +39,16 @@ function dayValid(diaFeriado, diaRecesso) {
             ano = lastDayMonth.getFullYear();
         }
 
-          Swal.fire({
-            position: 'top',
+        positionAction = 'top';
+
+        if(window.innerWidth <= 992){
+            positionAction = 'center'
+        }
+
+        Swal.fire({
+
+          position: positionAction,
+
             title: `Cotação do Dolar esta dia Anterior ${diaAtual + '/' + mesBrl + '/' + ano} porquê hoje é feriado "${diaRecesso}" !`
         });
 
@@ -89,24 +97,26 @@ function dayValid(diaFeriado, diaRecesso) {
         if (final >= 2 && final <= 5 && horaAtual >= '12:12:00' && horaAtual <= '17:12:00') {
             diaAtual;
         }
-        
+
         return diaAtual >= 1 && diaAtual <= 9 ? diaAtual = '0' + diaAtual : diaAtual;
 
     }
 }
 
 
-fetch(`http://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
+fetch('https://rodriguesfas.github.io/holidays/national.json')
     .then(resp => resp.json())
     .then(holiday => {
         let parametersHoliday = [];
-        diasFeriados = holiday.data;
+        diasFeriados = holiday;
         diaFeriado = false;
         diasFeriados.map((feriado, indice) => {
-            nomesFeriados = feriado.nome;
-            dataFeriado = feriado.data;
+            nomesFeriados = feriado.title;
+            dataFeriado = feriado.date + '-' + ano;
 
-            if (dataAtual == dataFeriado) {
+
+
+            if (dataAtual == +dataFeriado) {
                 diaFeriado = true;
                 diaRecesso = nomesFeriados;
                 parametersHoliday.push(diaFeriado, diaRecesso);
@@ -120,8 +130,14 @@ fetch(`http://solucoes.dev.br/calc/api/api-feriados.php?ano=${ano}`)
 
         DayAction = dayValid(parametersHoliday[0], parametersHoliday[1]);
 
+        positionAction = 'top';
+
+        if(window.innerWidth <= 992){
+            positionAction = 'center'
+        }
+
         Swal.fire({
-            position: 'top',
+          position: positionAction,
             title: `A cotação do dólar esta do dia  ${DayAction}/${mesBrl}/${ano}.`
         });
 
