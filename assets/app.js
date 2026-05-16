@@ -133,11 +133,17 @@ fetch('https://rodriguesfas.github.io/holidays/national.json')
         if(window.innerWidth <= 992){
             positionAction = 'center'
         }
+        
+       const message= setTimeout(()=>{
+            Swal.fire({
+                position: positionAction,
+                title: `Cotação do dólar do dia`,
+                text:`${DayAction}/${mesBrl}/${ano}`
+                ,
+                icon:'success'
+            })
 
-        Swal.fire({
-          position: positionAction,
-            title: `A cotação do dólar esta do dia  ${DayAction}/${mesBrl}/${ano}.`
-        });
+        },2000);
 
         fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${mesBrl}-${DayAction}-${ano}'&$top=100&$format=json&$select=cotacaoVenda`).then(resp => resp.json())
             .then(data => {
@@ -246,6 +252,34 @@ fetch('https://rodriguesfas.github.io/holidays/national.json')
                         usdInput.value = USDollar.format(number2);
                     }
                 }
+            }).catch((error)=>{
+                
+            if (window.innerWidth <= 992) {
+                positionAction = 'center'
+            }
+            
+            clearTimeout(message)
+            
+            Swal.fire({
+                position: positionAction,
+                title: `Erro critico !`,
+                text:'Não estamos conectados com o servidor do Banco Central do Brasil.'
+                ,
+                icon:'error'
+            })
+        })
+    }).catch((error)=>{
+                
+            if (window.innerWidth <= 992) {
+                positionAction = 'center'
+            }
+            
+            Swal.fire({
+                position: positionAction,
+                title: `Erro ao buscar veriados!`,
+                text:'Não foi possível verificar informações sobre veriados no momento.'
+                ,
+                icon:'error'
             })
     })
 
