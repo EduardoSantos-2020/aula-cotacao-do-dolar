@@ -143,7 +143,7 @@ fetch('https://rodriguesfas.github.io/holidays/national.json')
                 icon:'success'
             })
 
-        },2000);
+        },1000);
 
         fetch(`https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${mesBrl}-${DayAction}-${ano}'&$top=100&$format=json&$select=cotacaoVenda`).then(resp => resp.json())
             .then(data => {
